@@ -187,9 +187,9 @@ void goose_dump(const u_char* packet)
     packet += sizeof(uint8_t);
     memcpy(gocbRef, packet, len_gocbRef);
 
-    printf("    tag_gocRef : %#x\n", tag_gocbRef);
-    printf("    len_gocRef : %#x\n", len_gocbRef);
-    printf("gocRef : %s\n\n", gocbRef);
+//    printf("    tag_gocRef : %#x\n", tag_gocbRef);
+//    printf("    len_gocRef : %#x\n", len_gocbRef);
+    printf("gocRef : %s\n", gocbRef);
 
     packet += len_gocbRef;
     uint8_t tag_timeAllowedtoLive = *packet;
@@ -197,56 +197,130 @@ void goose_dump(const u_char* packet)
     uint8_t len_timeAllowedtoLive = *packet;
     packet += sizeof(uint8_t);
     uint8_t timeAllowedtoLive[len_timeAllowedtoLive];
-    packet += sizeof(uint8_t);
+    packet += sizeof(uint16_t);
     memcpy(timeAllowedtoLive, packet, len_timeAllowedtoLive);
 
-    printf("    tag_timeAllowedtoLive : %#x\n", tag_timeAllowedtoLive);
-    printf("    len_timeAllowedtoLive : %#x\n", len_timeAllowedtoLive);
-    printf("timeAllowedtoLive : %d\n\n", *timeAllowedtoLive);
+//    printf("    tag_timeAllowedtoLive : %#x\n", tag_timeAllowedtoLive);
+//    printf("    len_timeAllowedtoLive : %#x\n", len_timeAllowedtoLive);
+    printf("timeAllowedtoLive : %#x\n", ntohs(*timeAllowedtoLive));
 
 
-    uint8_t tag_dataSet = *(packet + len_gocbRef);
-    uint8_t len_dataSet = *(packet + sizeof(uint8_t));
+    packet += (len_timeAllowedtoLive - sizeof(uint16_t));
+    uint8_t tag_dataSet = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_dataSet = *packet;
+    packet += sizeof(uint8_t);
     uint8_t dataSet[len_dataSet];
     memcpy(dataSet, packet, len_dataSet);
 
-    printf("    tag_dataSet : %#x\n", tag_dataSet);
-    printf("    len_dataSet : %#x\n", len_dataSet);
+//    printf("    tag_dataSet : %#x\n", tag_dataSet);
+//    printf("    len_dataSet : %#x\n", len_dataSet);
     printf("dataSet : %s\n", dataSet);
 
-    uint8_t tag_goID;
-    uint8_t len_goID;
+    packet += len_dataSet;
+    uint8_t tag_goID = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_goID = *packet;
+    packet += sizeof(uint8_t);
     uint8_t goID[len_goID];
+    memcpy(goID, packet, len_goID);
 
-    uint8_t tag_time;
-    uint8_t len_time;
+//    printf("    tag_goID : %#x\n", tag_goID);
+//    printf("    len_goID : %#x\n", len_goID);
+    printf("goID : %s\n", goID);
+
+    packet += len_goID;
+    uint8_t tag_time = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_time = *packet;
+    packet += sizeof(uint8_t);
     uint8_t time[len_time];
+    memcpy(time, packet, len_time);
 
-    uint8_t tag_stNum;
-    uint8_t len_stNum;
-    uint8_t stNum[len_stNum];
+//    printf("    tag_time : %#x\n", tag_time);
+//    printf("    len_time : %#x\n", len_time);
+    printf("time : %s\n", time);
 
-    uint8_t tag_sqNum;
-    uint8_t len_sqNum;
-    uint8_t sqNum[len_sqNum];
+    packet += len_time;
+    uint8_t tag_stNum = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_stNum = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t stNum = *packet;
 
-    uint8_t tag_test;
-    uint8_t len_test;
-    uint8_t test[len_test];
+//    printf("    tag_stNum : %#x\n", tag_stNum);
+//    printf("    len_stNum : %#x\n", len_stNum);
+    printf("stNum : %d\n", stNum);
 
-    uint8_t tag_confRev;
-    uint8_t len_confRev;
-    uint8_t confRev[len_confRev];
+    packet += len_stNum;
+    uint8_t tag_sqNum = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_sqNum = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t sqNum = *packet;
 
-    uint8_t tag_ndsCom;
-    uint8_t len_ndsCom;
-    uint8_t ndsCom[len_ndsCom];
+//    printf("    tag_sqNum : %#x\n", tag_sqNum);
+//    printf("    len_sqNum : %#x\n", len_sqNum);
+    printf("sqNum : %d\n", sqNum);
 
-    uint8_t tag_numDataSetEntries;
-    uint8_t len_numDataSetEntries;
-    uint8_t numDataSetEntries[len_numDataSetEntries];
+    packet += len_sqNum;
+    uint8_t tag_test = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_test = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t test = *packet;
 
-    uint8_t tag_allData;
-    uint8_t len_allData;
-    uint8_t allData[len_allData];
+//    printf("    tag_test : %#x\n", tag_test);
+//    printf("    len_test : %#x\n", len_test);
+    if(test == 0x00)
+        printf("test : False\n");
+    else if(test == 0x01)
+        printf("test : True\n");
+
+
+    packet += len_test;
+    uint8_t tag_confRev = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_confRev = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t confRev = *packet;
+
+//    printf("    tag_confRev : %#x\n", tag_confRev);
+//    printf("    len_confRev : %#x\n", len_confRev);
+    printf("confRev : %d\n", confRev);
+
+    packet += len_test;
+    uint8_t tag_ndsCom = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_ndsCom = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t ndsCom = *packet;
+
+//    printf("    tag_ndsCom : %#x\n", tag_ndsCom);
+//    printf("    len_ndsCom : %#x\n", len_ndsCom);
+    if(ndsCom == 0x00)
+        printf("ndsCom : False\n");
+    else if(ndsCom == 0x01)
+        printf("ndsCom : True\n");
+
+
+    packet += len_ndsCom;
+    uint8_t tag_numDataSetEntries = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_numDataSetEntries = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t numDataSetEntries = *packet;
+
+//    printf("    tag_numDataSetEntries : %#x\n", tag_numDataSetEntries);
+//    printf("    len_numDataSetEntries : %#x\n", len_numDataSetEntries);
+    printf("numDataSetEntries : %d\n", numDataSetEntries);
+
+    packet += len_numDataSetEntries;
+    uint8_t tag_allData = *packet;
+    packet += sizeof(uint8_t);
+    uint8_t len_allData = *packet;
+    packet += sizeof(uint8_t);
+
+//    printf("    tag_allData : %#x\n", tag_allData);
+//    printf("    len_allData : %#x\n", len_allData);
 }
